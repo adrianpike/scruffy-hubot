@@ -1,1 +1,1 @@
-app: bin/hubot -a campfire -n scruffy
+app: bin/hubot -a irc -n scruffy
