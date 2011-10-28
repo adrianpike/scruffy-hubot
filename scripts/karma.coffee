@@ -7,7 +7,8 @@ module.exports = (robot) ->
   robot.hear /(\w*)(\+\+|\-\-)$/i, (msg) ->
     object = msg.match[1]
     action = msg.match[2]
-    karma(robot, msg, object, action)
+    if object
+      karma(robot, msg, object, action)
 
 karma = (robot, msg, object, action) ->
   if typeof(robot.brain.data.karma) is 'undefined'
