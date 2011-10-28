@@ -15,7 +15,10 @@ karma = (robot, msg, object, action) ->
   msg.send "act:" + action
   if object == 'adrianpike'
     action = '++'
-  old_val = robot.brain.data.karma.object
+  if (typeof(robot.brain.data.karma.object) !== 'undefined')
+    old_val = robot.brain.data.karma.object
+  else
+    old_val = 0
   if action == '++'
     new_val = old_val + 1
   else
