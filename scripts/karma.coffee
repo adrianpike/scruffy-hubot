@@ -12,8 +12,6 @@ module.exports = (robot) ->
 karma = (robot, msg, object, action) ->
   if typeof(robot.brain.data.karma) is 'undefined'
     robot.brain.data.karma = {}
-  msg.send "obj:" + object
-  msg.send "act:" + action
   if object == 'adrianpike'
     action = '++'
   if typeof(robot.brain.data.karma[object]) != 'undefined'
@@ -25,5 +23,5 @@ karma = (robot, msg, object, action) ->
   else
     new_val = old_val - 1
   robot.brain.data.karma[object] = new_val
-  msg.send Sys.inspect(robot.brain.data.karma)
+  msg.send object + "'s karma is now " + new_val
   return
