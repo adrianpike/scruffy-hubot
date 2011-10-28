@@ -10,7 +10,8 @@ module.exports = (robot) ->
     karma(robot, msg, object, action)
 
 karma = (robot, msg, object, action) ->
-  robot.brain.data.karma = {}
+  if typeof(robot.brain.data.karma) is 'undefined'
+    robot.brain.data.karma = {}
   msg.send "obj:" + object
   msg.send "act:" + action
   if object == 'adrianpike'
