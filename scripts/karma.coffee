@@ -13,12 +13,11 @@ karma = (robot, msg, object, action) ->
   msg.send "act:" + action
   if object == 'adrianpike'
     action = '++'
-  # old_val = robot.brain.data.karma[object] || 0
-  old_val = 0
+  old_val = robot.brain.data.karma.object
   if action == '++'
     new_val = old_val + 1
   else
     new_val = old_val - 1
-    
-  msg.send robot.brain.data.karma
+  robot.brain.data.karma.object = new_val
+  msg.send Sys.inspect(robot.brain.data.karma)
   return
