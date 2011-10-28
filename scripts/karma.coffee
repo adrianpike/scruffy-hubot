@@ -1,6 +1,8 @@
 # Increment and decrement karma based on + and -
 # 
 
+Sys = require "sys"
+
 module.exports = (robot) ->
   robot.hear /(\w*)(\+\+|\-\-)$/i, (msg) ->
     object = msg.match[1]
