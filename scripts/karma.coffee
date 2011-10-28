@@ -19,7 +19,6 @@ karma = (robot, msg, object, action) ->
     new_val = old_val + 1
   else
     new_val = old_val - 1
-  end
     
   msg.send robot.brain.data.karma
   return
