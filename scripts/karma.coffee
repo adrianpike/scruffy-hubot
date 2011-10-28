@@ -2,12 +2,13 @@
 # 
 
 module.exports = (robot) ->
-  robot.hear /^(.*)(\+\+|\-\-)$/i, (msg) ->
+  robot.hear /(.*)(\+\+|\-\-)$/i, (msg) ->
     object = msg.match[1]
     action = msg.match[2]
     karma(robot, msg, object, action)
 
 karma = (robot, msg, object, action) ->
+  robot.brain.data[karma] = {}
   msg.send "obj:" + object
   msg.send "act:" + action
   if object == 'adrianpike'
