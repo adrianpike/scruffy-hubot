@@ -4,9 +4,9 @@
 Sys = require "sys"
 
 module.exports = (robot) ->
-  robot.hear /karma (\w+)/, (msg) ->
+  robot.hear /karma ?(\w+)/, (msg) ->
     if msg.match[1]
-      msg.send(robot.brain.data.karma[object])
+      msg.send(robot.brain.data.karma[msg.match[1]])
     else
       msg.send(robot.brain.data.karma)
     end

@@ -3,7 +3,7 @@ markov = markov_lib()
 
 module.exports = (robot) ->
   robot.hear /(.+)/i, (msg) ->
-    if /^markov/i.exec(msg)
+    if /^markov/i.exec(msg.match[1])
       return
     msg.send '-seeding ' + msg.match[1]
     markov.seed msg.match[1]
