@@ -8,7 +8,7 @@ module.exports = (robot) ->
     if msg.match[1]
       msg.send(robot.brain.data.karma[msg.match[1]])
     else
-      output = Sys.inspect(robot.brain.data.karma, false, 4)
+      output = Sys.inspect(robot.brain.data.karma)
       msg.send(output)
 
   robot.hear /(\w*)(\+\+|\-\-)$/i, (msg) ->
