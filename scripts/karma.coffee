@@ -4,6 +4,13 @@
 Sys = require "sys"
 
 module.exports = (robot) ->
+  robot.hear /karma (\w+)/, (msg) ->
+    if msg.match[1]
+      msg.send(robot.brain.data.karma[object])
+    else
+      msg.send(robot.brain.data.karma)
+    end
+
   robot.hear /(\w*)(\+\+|\-\-)$/i, (msg) ->
     object = msg.match[1]
     action = msg.match[2]
