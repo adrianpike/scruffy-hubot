@@ -1,1 +1,1 @@
-app: bin/hubot -a irc -n scruffy-test
+app: bin/hubot -a irc -n scruffy
