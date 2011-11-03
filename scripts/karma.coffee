@@ -11,7 +11,7 @@ module.exports = (robot) ->
       output = Sys.inspect(robot.brain.data.karma)
       msg.send(output)
 
-  robot.hear /(\w*)(\+\+|\-\-)$/i, (msg) ->
+  robot.hear /^([\w\.-]+)(\+\+|\-\-)$/i, (msg) ->
     object = msg.match[1]
     action = msg.match[2]
     if object
@@ -22,6 +22,8 @@ karma = (robot, msg, object, action) ->
     robot.brain.data.karma = {}
   if object == 'adrianpike'
     action = '++'
+  if object == 'coffeescript'
+    action = '--'
   if typeof(robot.brain.data.karma[object]) != 'undefined'
     old_val = robot.brain.data.karma[object]
   else
