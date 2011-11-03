@@ -4,7 +4,7 @@
 Sys = require "sys"
 
 module.exports = (robot) ->
-  robot.hear /(\w*)(\+\+|\-\-)$/i, (msg) ->
+  robot.hear /^([\w\.-]+)(\+\+|\-\-)$/i, (msg) ->
     object = msg.match[1]
     action = msg.match[2]
     if object
