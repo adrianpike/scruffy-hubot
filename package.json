@@ -18,5 +18,10 @@
     "hubot": ">= 1.0.6",
     "hubot-scripts": ">= 1.0.4",
     "markov": ">= 0.0.6"
+  },
+
+  "engines": {
+    "node": "0.6.x",
+    "npm":  "1.0.x"
   }
 }
