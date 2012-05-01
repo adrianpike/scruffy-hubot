@@ -58,10 +58,12 @@ memeGenerator = (msg, generatorID, imageID, text0, text1, callback) ->
       text0: text0,
       text1: text1
     .get() (err, res, body) ->
-      result = JSON.parse(body)['result']
-      instanceURL = result['instanceUrl']
-      img = "http://memegenerator.net" + result['instanceImageUrl']
-
-      msg.http(instanceURL).get() (err, res, body) ->
-        # Need to hit instanceURL so that image gets generated
-        callback img
+        result = JSON.parse(body)['result']
+        if result? and result['instanceUrl']? and result['instanceImageUrl']?
+          instanceURL = result['instanceUrl']
+          img = result['instanceImageUrl']
+          msg.http(instanceURL).get() (err, res, body) ->
+            # Need to hit instanceURL so that image gets generated
+            callback img
+        else
+          msg.reply "Sorry, I couldn't generate that image. Memegenerator is probably hosed."
