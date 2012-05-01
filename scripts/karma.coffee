@@ -1,33 +1,97 @@
-# Increment and decrement karma based on + and -
+# Track arbitrary karma
 #
+# <thing>++ - give thing some karma
+# <thing>-- - take away some of thing's karma
+# karma <thing> - check thing's karma (if <thing> is omitted, show the top 5)
+# karma empty <thing> - empty a thing's karma
+# karma best - show the top 5
+# karma worst - show the bottom 5
+class Karma
+  
+  constructor: (@robot) ->
+    @cache = {}
+    
+    @increment_responses = [
+      "+1!", "gained a level!", "is on the rise!", "leveled up!"
+    ]
+  
+    @decrement_responses = [
+      "took a hit! Ouch.", "took a dive.", "lost a life.", "lost a level."
+    ]
+    
+    @robot.brain.on 'loaded', =>
+      if @robot.brain.data.karma
+        @cache = @robot.brain.data.karma
+  
+  kill: (thing) ->
+    delete @cache[thing]
+    @robot.brain.data.karma = @cache
+  
+  increment: (thing) ->
+    @cache[thing] ?= 0
+    @cache[thing] += 1
+    @robot.brain.data.karma = @cache
 
-Sys = require "sys"
+  decrement: (thing) ->
+    @cache[thing] ?= 0
+    @cache[thing] -= 1
+    @robot.brain.data.karma = @cache
+  
+  incrementResponse: ->
+     @increment_responses[Math.floor(Math.random() * @increment_responses.length)]
+  
+  decrementResponse: ->
+     @decrement_responses[Math.floor(Math.random() * @decrement_responses.length)]
 
+  get: (thing) ->
+    k = if @cache[thing] then @cache[thing] else 0
+    return k
+
+  sort: ->
+    s = []
+    for key, val of @cache
+      s.push({ name: key, karma: val })
+    s.sort (a, b) -> b.karma - a.karma
+  
+  top: (n = 5) ->
+    sorted = @sort()
+    sorted.slice(0, n)
+    
+  bottom: (n = 5) ->
+    sorted = @sort()
+    sorted.slice(-n).reverse()
+  
 module.exports = (robot) ->
-  robot.hear /$karma ?(\w+)?/, (msg) ->
-    if msg.match[1]
-      msg.send(robot.brain.data.karma[msg.match[1]])
-    else
-      output = Sys.inspect(robot.brain.data.karma)
-      msg.send(output)
-
-  robot.hear /^(?:\w+:\s*)?([^+-]+)(\+\++|\-\-+)$/i, (msg) ->
-    object = msg.match[1]
-    action = msg.match[2]
-    if object
-      karma(robot, msg, object, action)
-
-karma = (robot, msg, object, action) ->
-  if typeof(robot.brain.data.karma) is 'undefined'
-    robot.brain.data.karma = {}
-  if typeof(robot.brain.data.karma[object]) != 'undefined'
-    old_val = robot.brain.data.karma[object]
-  else
-    old_val = 0
-  if action[0] == '+'
-    new_val = old_val + action.length - 1
-  else
-    new_val = old_val - action.length + 1
-  robot.brain.data.karma[object] = new_val
-  msg.send object + "'s karma is now " + new_val
-  return
+  karma = new Karma robot
+  robot.hear /(\S+[^+\s])\+\+(\s|$)/, (msg) ->
+    subject = msg.match[1].toLowerCase()
+    karma.increment subject
+    msg.send "#{subject} #{karma.incrementResponse()} (Karma: #{karma.get(subject)})"
+  
+  robot.hear /(\S+[^-\s])--(\s|$)/, (msg) ->
+    subject = msg.match[1].toLowerCase()
+    karma.decrement subject
+    msg.send "#{subject} #{karma.decrementResponse()} (Karma: #{karma.get(subject)})"
+  
+  robot.respond /karma empty ?(\S+[^-\s])$/i, (msg) ->
+    subject = msg.match[1].toLowerCase()
+    karma.kill subject
+    msg.send "#{subject} has had its karma scattered to the winds."
+  
+  robot.respond /karma( best)?$/i, (msg) ->
+    verbiage = ["The Best"]
+    for item, rank in karma.top()
+      verbiage.push "#{rank + 1}. #{item.name} - #{item.karma}"
+    msg.send verbiage.join("\n")
+      
+  robot.respond /karma worst$/i, (msg) ->
+    verbiage = ["The Worst"]
+    for item, rank in karma.bottom()
+      verbiage.push "#{rank + 1}. #{item.name} - #{item.karma}"
+    msg.send verbiage.join("\n")
+  
+  robot.respond /karma (\S+[^-\s])$/i, (msg) ->
+    match = msg.match[1].toLowerCase()
+    if match != "best" && match != "worst"
+      msg.send "\"#{match}\" has #{karma.get(match)} karma."
+  
