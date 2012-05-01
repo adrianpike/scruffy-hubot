@@ -11,7 +11,7 @@ module.exports = (robot) ->
       output = Sys.inspect(robot.brain.data.karma)
       msg.send(output)
 
-  robot.hear /^(.+)(\+\+|\-\-)$/i, (msg) ->
+  robot.hear /^(?:\w+:\s*)?([^+-]+)(\+\++|\-\-+)$/i, (msg) ->
     object = msg.match[1]
     action = msg.match[2]
     if object
@@ -24,10 +24,10 @@ karma = (robot, msg, object, action) ->
     old_val = robot.brain.data.karma[object]
   else
     old_val = 0
-  if action == '++'
-    new_val = old_val + 1
+  if action[0] == '+'
+    new_val = old_val + action.length - 1
   else
-    new_val = old_val - 1
+    new_val = old_val - action.length + 1
   robot.brain.data.karma[object] = new_val
   msg.send object + "'s karma is now " + new_val
   return
