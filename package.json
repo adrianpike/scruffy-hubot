@@ -1,5 +1,5 @@
 {
-  "name":        "hosted-hubot",
+  "name":        "scruffy",
   "version":     "0.1.0",
   "author":      "GitHub Inc.",
   "keywords":    "github hubot campfire bot",
@@ -17,6 +17,7 @@
   "dependencies": {
     "hubot": ">= 1.0.6",
     "hubot-scripts": ">= 1.0.4",
+    "hubot-irc": ">= 0.0.8",
     "markov": ">= 0.0.6"
   },
 
